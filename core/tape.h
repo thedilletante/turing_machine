@@ -60,9 +60,29 @@ inline Tape::Tape(const Tape::svector& vector, const symbol d, const size_t p)
 inline size_t Tape::size() const { return tape.size(); }
 
 inline std::ostream& operator<<(std::ostream& os, const Tape& tape) {
-	for (Tape::slist::const_iterator i = tape.tape.begin(), end = tape.tape.end();
-			i != end; ++i)
-		os << *i << ' ';
+	Tape::slist::const_iterator begin = tape.tape.begin();
+	Tape::slist::const_iterator end = tape.tape.end();
+
+	while (begin != end) {
+		if (*begin != tape.DEFAULT_SYMBOL) break;
+		begin++;
+	}
+	if (begin == end) return os;
+
+	Tape::slist::const_iterator rend(begin);
+	Tape::slist::const_iterator iter(++rend);
+
+	while(iter != end) {
+		if (*iter != tape.DEFAULT_SYMBOL)
+			rend = iter;
+		iter++;
+	}
+
+
+	while (begin != rend) {
+		os << *begin;
+		begin++;
+	}
 	return os;
 }
 
@@ -85,13 +105,15 @@ public:
 	const symbol& observable() const;
 	Head& execute(const Command&);
 
-	friend std::ostream& operator<<(std::ostream& os, const Head&);
+	Head operator+(int) const;
+	Head operator-(int) const;
+
 
 private:
 	friend class Tape;
 	Head(Tape* t, const std::list< symbol >::iterator& i, const State& st) : tape(t), iter(i), s(st) {}
 	mutable Tape* tape;
-	std::list< symbol >::iterator iter;
+	mutable std::list< symbol >::iterator iter;
 	State s;
 
 	Head& go_to_right();
@@ -120,6 +142,14 @@ inline Tape::Head& Tape::Head::go_to_left() {
 	return *this;
 }
 
+inline Tape::Head Tape::Head::operator+(int offset) const {
+	Head result(*this);
+	if (offset > 0) for (int i = 0; i < offset; ++i) result.go_to_right();
+	else for (int i = 0; i > offset; --i ) result.go_to_left();
+	return result;
+}
+
+inline Tape::Head Tape::Head::operator-(int offset) const { return *this + (-offset); }
 
 }
 

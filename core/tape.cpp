@@ -1,5 +1,4 @@
 #include "tape.h"
-#include <unistd.h>
 
 Turing::Tape::Head Turing::Tape::setHead(int position, const Turing::State& st) {
 	std::list< symbol >::iterator iter(tape.begin());
@@ -35,28 +34,4 @@ Turing::Tape::Head& Turing::Tape::Head::execute(const Turing::Command& cmd) {
 			break;
 	}
 	return *this;
-}
-
-std::ostream& Turing::operator<<(std::ostream& os, const Turing::Tape::Head& head) {
-	size_t len = head.state().n().length();
-
-	Tape::Head h(head);
-	h.go_to_left().go_to_left().go_to_left().go_to_left().go_to_left().go_to_left().go_to_left();
-	for (int i = 0; i < 15; ++i, h.go_to_right()) {
-		os << *h.iter << " ";
-	}
-	os << std::flush;
-
-
-	/*
-	os << "      V" << head.state().n() << "\n";
-	Tape::Head h(head);
-	h.go_to_left().go_to_left().go_to_left();
-	for (int i = 0; i < 7; ++i, h.go_to_right()) {
-		os << *h.iter << " ";
-	}
-	*/
-	usleep(300000);
-	for (int i = 0; i < 31; ++i) os << "\b";
-	return os;
 }
