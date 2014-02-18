@@ -24,11 +24,9 @@ private:
 	const char DELIMETER;
 
 	std::istream* current;
-	std::map< std::string, State > states;
-	int counter;
 
 
-	const State& state();
+	const State state();
 	const Tape::symbol symbol();
 	void arrow();
 	const Command::Direction dir();
@@ -46,7 +44,7 @@ inline void skip(std::istream* input) {
 }
 
 // inline
-inline const State& Parser::state() {
+inline const State Parser::state() {
 	std::string state;
 	char ch;
 	while (current->get(ch)) {
@@ -55,9 +53,7 @@ inline const State& Parser::state() {
 		else throw Syntax_error();
 	}
 	if (state.empty()) throw Syntax_error();
-	std::map< std::string, State>::iterator i = states.find( state );
-	if (i != states.end()) return i->second;
-	return states[state] = ++counter;
+	return state;
 }
 
 inline const Tape::symbol Parser::symbol() {
@@ -101,23 +97,21 @@ inline Program& Parser::parse(std::istream* input) {
 	if (i != cache.end()) return i->second;
 	Program& program = cache[input];
 	current = input;
-	counter = -1;
 
 
 	while (!input->eof()) {
-		skip(current); const State& cur_state = state();
-		skip(current); const Tape::symbol observ = symbol();
+		skip(current); const State cur_state(state());
+		skip(current); const Tape::symbol observ(symbol());
 		skip(current); arrow();
-		skip(current); const State& s_change = state();
-		skip(current); const Tape::symbol sym_change = symbol();
-		skip(current); const Command::Direction direction = dir();
+		skip(current); const State s_change(state());
+		skip(current); const Tape::symbol sym_change(symbol());
+		skip(current); const Command::Direction direction(dir());
 		skip(current); separator(); skip(current);
 
 		program.add_command(cur_state, observ, Command(s_change, sym_change, direction));
 	}
 
 	current = 0;
-	states.clear();
 	return program;
 }
 

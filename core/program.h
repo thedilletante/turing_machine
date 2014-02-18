@@ -2,6 +2,7 @@
 #define _TURING_MACHINE_PROGRAM
 
 #include <map>
+#include <iostream>
 #include "command.h"
 #include "tape.h"
 
@@ -23,6 +24,8 @@ private:
 public:
 	// interface
 	Command command(const State&, const Tape::symbol&) const;
+
+	friend std::ostream& operator<<(std::ostream&, const Program&);
 
 private:
 	typedef std::map< Tape::symbol, Command > smap;
@@ -48,6 +51,25 @@ inline Program& Program::add_command(const State& st, const Tape::symbol& s, con
 	contaiter[st][s] = c;
 	return *this;
 } 
+
+inline std::ostream& operator<<(std::ostream& os, const Program& p) {
+	for (Program::cmap::const_iterator i = p.contaiter.begin(), end = p.contaiter.end(); i != end; ++i)
+		for (Program::smap::const_iterator j = i->second.begin(), jend = i->second.end(); j != jend; ++j) {
+			os << "command: " << i->first.n() 
+				<< " " << j->first << " -> " << j->second.state().n()
+				<< " " << j->second.change() << " ";
+			switch (j->second.direction()) {
+				case Command::LEFT: os << "L"; break;
+				case Command::RIGHT: os << "R"; break;
+				case Command::STOP:
+				default:
+					os << "S";
+					break;
+			}
+			std::cout << std::endl;
+		}
+	return os;
+}
 
 } // namespace Turing
 

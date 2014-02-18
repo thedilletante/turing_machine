@@ -1,15 +1,19 @@
 #ifndef _TURING_MACHINE_STATE
 #define _TURING_MACHINE_STATE
 
+#include <string>
+
 namespace Turing {
 
 struct State{
 public:
-	typedef int name;
+	typedef std::string name;
 
 	// constructors
 	State(const name& n) : _n(n) {}
-	State() : _n('\0') {}
+	State() {}
+
+	const name n() const { return _n; }
 
 	bool operator<(const State& s) const { return _n < s._n; }
 private:
