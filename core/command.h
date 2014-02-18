@@ -1,35 +1,37 @@
 #ifndef _TURING_MACHINE_COMMAND
 #define _TURING_MACHINE_COMMAND
 
-#include "cell.h"
+#include "tape.h"
+#include "state.h"
 
 namespace Turing {
 
 struct Command {
 
 public:
-	enum Direction { INIT, STOP, LEFT, RIGHT };
+	enum Direction { STOP, LEFT, RIGHT };
 
 	// constructor
-	Command(const Direction&, const Cell::symbol&);
-	Command();
+	Command(const Direction&, const Tape::symbol&, const State&);
 
 	// getters
 	const Direction& direction() const;
-	const Cell::symbol& change() const;
+	const Tape::symbol& change() const;
+	const State& state() const;
 
 private:
 	Direction d;
-	Cell::symbol c;
+	Tape::symbol c;
+	State s;
 
 }; // struct Command
 
 // inline
 
-inline Command::Command(const Direction& direct, const Cell::symbol& sym) : d(direct), c(sym) {}
-inline Command::Command() : d(Command::INIT) {}
+inline Command::Command(const Direction& direct, const Tape::symbol& sym, const State& st) : d(direct), c(sym), s(st) {}
 inline const Command::Direction& Command::direction() const { return d; }
-inline const Cell::symbol& Command::change() const { return c; }
+inline const Tape::symbol& Command::change() const { return c; }
+inline const State& Command::state() const { return s; }
 
 inline bool operator==(const Command& cmd, const Command::Direction& dir) {
 	return cmd.direction() == dir;
