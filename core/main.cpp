@@ -21,11 +21,12 @@ int main(int argc, char *argv[]) {
 	int position = 0;
 	char def = ' ';
 
-	po::options_description desc("Allowed options");
+	std::string d("Program options");
+	po::options_description desc(d.c_str());
 	desc.add_options()
-	    ("program,P", po::value< std::string >(&p_file_name)->required(), "source files")
-	    ("tape,t", po::value< std::string >(&t)->required(), "file or line to set tape of symbols")
-	    ("state,S", po::value< std::string >(&state)->required(), "start state of head")
+	    ("program,P", po::value< std::string >(&p_file_name), "source files")
+	    ("tape,t", po::value< std::string >(&t), "file or line to set tape of symbols")
+	    ("state,S", po::value< std::string >(&state), "start state of head")
 	    ("position,p", po::value< int >(&position), "position of head, 0 by default")
 	    ("default,d", po::value< char >(&def), "default symbol, space ' ' by default" )
 	    ("latency,l", po::value<int>(&latency), "latency for show program work, 700000ms by default")
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}   
 
-	if (vm.count("help")) {
+	if (vm.count("help") || !vm.count("program") || !vm.count("tape") || !vm.count("state")) {
 	    std::cout << desc << "\n";
 	    return 1;
 	}
