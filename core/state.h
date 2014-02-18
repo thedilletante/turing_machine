@@ -5,7 +5,7 @@ namespace Turing {
 
 struct State{
 public:
-	typedef char name;
+	typedef int name;
 
 	// constructors
 	State(const name& n) : _n(n) {}

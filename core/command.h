@@ -12,7 +12,7 @@ public:
 	enum Direction { STOP, LEFT, RIGHT };
 
 	// constructor
-	Command(const Direction&, const Tape::symbol&, const State&);
+	Command(const State&, const Tape::symbol&, const Direction&);
 	Command();
 
 	// getters
@@ -29,7 +29,7 @@ private:
 
 // inline
 
-inline Command::Command(const Direction& direct, const Tape::symbol& sym, const State& st) : d(direct), c(sym), s(st) {}
+inline Command::Command(const State& st, const Tape::symbol& sym, const Direction& direct) : d(direct), c(sym), s(st) {}
 inline Command::Command() : d(STOP) {}
 inline const Command::Direction& Command::direction() const { return d; }
 inline const Tape::symbol& Command::change() const { return c; }

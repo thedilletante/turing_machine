@@ -7,15 +7,20 @@
 
 namespace Turing {
 
+class Parser;
+
 class Program {
 
 public:
 	// exceptions
 	class Command_not_found {};
+	friend class Parser;
 
+private:
 	// constructors
-	Program();
+	Program() {};
 
+public:
 	// interface
 	Command command(const State&, const Tape::symbol&) const;
 
@@ -24,13 +29,11 @@ private:
 	typedef std::map< State, smap > cmap;
 	cmap contaiter;
 
-}; // class Program
+	// Parser interface
+	Program& add_command(const State&, const Tape::symbol&, const Command&);
+	friend class std::map<std::istream*, Program>;
 
-// inline
-inline Program::Program() {
-	contaiter[State('a')]['_'] = Command(Command::RIGHT, '_', State('a'));
-	contaiter[State('a')]['a'] = Command(Command::STOP, '_', State('a'));
-}
+}; // class Program
 
 inline Command Program::command(const State& st, const Tape::symbol& sym) const {
 	cmap::const_iterator s_map = contaiter.find( st );
@@ -40,6 +43,11 @@ inline Command Program::command(const State& st, const Tape::symbol& sym) const 
 	}
 	throw Command_not_found();
 }
+
+inline Program& Program::add_command(const State& st, const Tape::symbol& s, const Command& c) {
+	contaiter[st][s] = c;
+	return *this;
+} 
 
 } // namespace Turing
 

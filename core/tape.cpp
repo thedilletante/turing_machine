@@ -37,10 +37,11 @@ Turing::Tape::Head& Turing::Tape::Head::execute(const Turing::Command& cmd) {
 }
 
 std::ostream& Turing::operator<<(std::ostream& os, const Turing::Tape::Head& head) {
-	std::list< Turing::Tape::symbol >::const_iterator i = head.t().begin();
-	while (i != head.iter) {
-		os << "  ";
-		++i;
+	os << "      V\n";
+	Tape::Head h(head);
+	h.go_to_left().go_to_left().go_to_left();
+	for (int i = 0; i < 7; ++i, h.go_to_right()) {
+		os << *h.iter << " ";
 	}
-	return os << "V\n" << *head.tape;
+	return os << std::endl;
 }
