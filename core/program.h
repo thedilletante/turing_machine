@@ -3,8 +3,7 @@
 
 #include <map>
 #include "command.h"
-#include "cell.h"
-#include "head.h"
+#include "tape.h"
 
 namespace Turing {
 
@@ -18,19 +17,22 @@ public:
 	Program();
 
 	// interface
-	const Command& command(const State&, const Cell::symbol&) const;
+	Command command(const State&, const Tape::symbol&) const;
 
 private:
-	typedef std::map< Cell::symbol, Command > smap;
+	typedef std::map< Tape::symbol, Command > smap;
 	typedef std::map< State, smap > cmap;
 	cmap contaiter;
 
 }; // class Program
 
 // inline
-inline Program::Program() {}
+inline Program::Program() {
+	contaiter[State('a')]['_'] = Command(Command::RIGHT, '_', State('a'));
+	contaiter[State('a')]['a'] = Command(Command::STOP, '_', State('a'));
+}
 
-inline const Command& Program::command(const State& st, const Cell::symbol& sym) const {
+inline Command Program::command(const State& st, const Tape::symbol& sym) const {
 	cmap::const_iterator s_map = contaiter.find( st );
 	if (s_map != contaiter.end()) {
 		smap::const_iterator cmd = s_map->second.find( sym );

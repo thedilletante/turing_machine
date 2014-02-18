@@ -9,6 +9,7 @@ public:
 
 	// constructors
 	State(const name& n) : _n(n) {}
+	State() : _n('\0') {}
 
 	bool operator<(const State& s) const { return _n < s._n; }
 private:

@@ -13,6 +13,7 @@ public:
 
 	// constructor
 	Command(const Direction&, const Tape::symbol&, const State&);
+	Command();
 
 	// getters
 	const Direction& direction() const;
@@ -29,6 +30,7 @@ private:
 // inline
 
 inline Command::Command(const Direction& direct, const Tape::symbol& sym, const State& st) : d(direct), c(sym), s(st) {}
+inline Command::Command() : d(STOP) {}
 inline const Command::Direction& Command::direction() const { return d; }
 inline const Tape::symbol& Command::change() const { return c; }
 inline const State& Command::state() const { return s; }

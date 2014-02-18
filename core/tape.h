@@ -91,7 +91,7 @@ private:
 	friend class Tape;
 	Head(Tape* t, const std::list< symbol >::iterator& i, const State& st) : tape(t), iter(i), s(st) {}
 	mutable Tape* tape;
-	mutable std::list< symbol >::iterator iter;
+	std::list< symbol >::iterator iter;
 	State s;
 
 	Head& go_to_right();
@@ -103,22 +103,15 @@ private:
 
 
 inline const State& Tape::Head::state() const { return s; }
-inline const Tape::symbol& Tape::Head::observable() const {
-	if (iter == t().end()) {
-		--iter;
-		tape->add_to_end();
-		++iter;
-	}
-	return *iter;
-}
+inline const Tape::symbol& Tape::Head::observable() const {	return *iter; }
 
 inline Tape::Head& Tape::Head::go_to_right() {
+	++iter;
 	if (iter == tape->tape.end()) {
 		--iter;
 		tape->add_to_end();
 		++iter;
 	}
-	++iter;
 	return *this;
 }
 inline Tape::Head& Tape::Head::go_to_left() {
