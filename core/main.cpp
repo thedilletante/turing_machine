@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
 	int latency = 700000;
 	int position = 0;
 	char def = ' ';
+	int qnt = 15;
 
 	std::string d("Program options");
 	po::options_description desc(d.c_str());
@@ -29,8 +30,10 @@ int main(int argc, char *argv[]) {
 	    ("state,S", po::value< std::string >(&state), "start state of head")
 	    ("position,p", po::value< int >(&position), "position of head, 0 by default")
 	    ("default,d", po::value< char >(&def), "default symbol, space ' ' by default" )
-	    ("latency,l", po::value<int>(&latency), "latency for show program work, 700000ms by default")
+	    ("latency,l", po::value< int >(&latency), "latency for show program work, 700000ms by default (don't work with -s options)")
+	    ("quantity,q", po::value< int >(&qnt), "quantity of showed tape, 15 by default (don`t work with -s options)")
 	    ("silence,s", "show only result")
+	    ("verbose,v", "By more verbose")
 	    ("help,h", "show this help and exit")
 	;
 
@@ -63,17 +66,20 @@ int main(int argc, char *argv[]) {
 	Turing::Tape::Head head(tape.setHead(position, Turing::State(state)));
 	Turing::Parser parser;
 	Turing::Program program(parser.parse(&file));
+	if (vm.count("verbose")) std::cout << program;
 
 	Turing::Command cmd;
 	ConsolePrinter p(head, &std::cout);
 
 	bool silence = vm.count("silence");
-	if (!silence) p.print(15, latency);
+	if (qnt < 0) qnt = -qnt;
+	else if (qnt == 0) qnt = 15;
+	if (!silence) p.print(qnt, latency);
 
 	do {
 		cmd = program.command( head.state(), head.observable() );
 		head.execute( cmd );
-		if (!silence) p.print(15, latency);
+		if (!silence) p.print(qnt, latency);
 	}
 	while (cmd != Turing::Command::STOP);
 	
