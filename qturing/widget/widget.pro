@@ -13,8 +13,18 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        turingmachine.cpp
+        turingmachine.cpp \
+    ../../core/command.cpp \
+    ../../core/parser.cpp \
+    ../../core/program.cpp \
+    ../../core/state.cpp \
+    ../../core/tape.cpp
 
-HEADERS  += turingmachine.h
+HEADERS  += turingmachine.h \
+    ../../core/command.h \
+    ../../core/parser.h \
+    ../../core/program.h \
+    ../../core/state.h \
+    ../../core/tape.h
 
 FORMS    += turingmachine.ui

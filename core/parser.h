@@ -26,10 +26,10 @@ private:
 	std::istream* current;
 
 
-	const State state();
-	const Tape::symbol symbol();
+    State state();
+    Tape::symbol symbol();
 	void arrow();
-	const Command::Direction dir();
+    Command::Direction dir();
 	void separator();
 };
 
@@ -44,7 +44,7 @@ inline void skip(std::istream* input) {
 }
 
 // inline
-inline const State Parser::state() {
+inline State Parser::state() {
 	std::string state;
 	char ch;
 	while (current->get(ch)) {
@@ -56,7 +56,7 @@ inline const State Parser::state() {
 	return state;
 }
 
-inline const Tape::symbol Parser::symbol() {
+inline Tape::symbol Parser::symbol() {
 	Tape::symbol ch;
 	if (!current->get(ch)) throw Syntax_error();
 	return ch;
@@ -69,9 +69,8 @@ inline void Parser::arrow() {
 	throw Syntax_error();
 }
 
-inline const Command::Direction Parser::dir() {
-	char ch;
-	char del = ch;
+inline Command::Direction Parser::dir() {
+    char ch;
 	if (!current->get(ch)) return Command::STOP;
 	switch(ch) {
 		case 'R': return Command::RIGHT;
