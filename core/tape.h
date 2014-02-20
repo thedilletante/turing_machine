@@ -72,9 +72,11 @@ inline std::ostream& operator<<(std::ostream& os, const Tape& tape) {
 	Tape::slist::const_iterator rend(begin);
 	Tape::slist::const_iterator iter(++rend);
 
-	do { ++rend; }
-	while(*rend != tape.DEFAULT_SYMBOL && rend != end); 
-
+	while (iter != end) {
+		if (*iter != tape.DEFAULT_SYMBOL) rend = iter;
+		++iter;
+	}
+	++rend;
 
 	while (begin != rend) {
 		os << *begin;
