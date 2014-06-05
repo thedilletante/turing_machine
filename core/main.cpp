@@ -92,15 +92,23 @@ int main(int argc, char *argv[]) {
 	else if (qnt == 0) qnt = 15;
 	if (!silence) p.print(qnt, latency);
 
-	do {
-		cmd = program.command( head.state(), head.observable() );
-		head.execute( cmd );
-		if (!silence) p.print(qnt, latency);
-	}
-	while (cmd != Turing::Command::STOP);
+    try
+    {
+	    do {
+		    cmd = program.command( head.state(), head.observable() );
+		    head.execute( cmd );
+		    if (!silence) p.print(qnt, latency);
+	    }
+	    while (cmd != Turing::Command::STOP);
+    }
+    catch (Turing::Program::Command_not_found &not_found)
+    {
+        std::cout << std::endl << "Your program is bad" << std::endl;
+    }
 	
 	if (silence) std::cout << tape;
-	std::cout << std::endl;
+    // because printer do not display EOL
+    std::cout << std::endl;
 	
 	return 0;
 }
